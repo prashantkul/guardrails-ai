@@ -101,12 +101,14 @@ class GroundedAIHallucinationGuard:
         
         # TODO: STUDENT TASK 1
         # Check for factual claims if enabled
+        factual_issues = []
         if self.check_factual_claims:
             # TODO: Call self._check_factual_claims(value)
             factual_issues = []  # TODO: Implement this
         
         # TODO: STUDENT TASK 2
         # Check for uncertainty markers
+        uncertainty_score, uncertainty_issues = 0.0, []
         if self.check_uncertainty_markers:
             # TODO: Call self._analyze_uncertainty_markers(value)
             uncertainty_score, uncertainty_issues = 0.0, []  # TODO: Implement this
@@ -118,6 +120,7 @@ class GroundedAIHallucinationGuard:
         
         # TODO: STUDENT TASK 4
         # Use LLM for verification if enabled
+        llm_issues = []
         if self.use_llm_verification:
             # TODO: Call self._llm_fact_check(value)
             llm_issues = []  # TODO: Implement this

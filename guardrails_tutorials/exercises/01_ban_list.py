@@ -69,6 +69,10 @@ class BanListGuard:
         # Implement the main validation logic
         # YOUR CODE HERE:
         
+        # Check if banned_set exists (student hasn't completed TODO yet)
+        if not hasattr(self, 'banned_set'):
+            return value  # Return unchanged if not implemented
+        
         text_to_check = value if self.case_sensitive else value.lower()
         
         for banned_item in self.banned_set:

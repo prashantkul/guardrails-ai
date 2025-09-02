@@ -220,15 +220,22 @@ def _run_json_test_cases(guard: ValidJSONGuard, test_cases: list):
     for i, (json_text, expected) in enumerate(test_cases, 1):
         try:
             result = guard.validate(json_text)
+            if result is None:
+                # Handle case where TODO is not implemented
+                status = "⚠️  NOT IMPLEMENTED" if expected == "SHOULD_PASS" else "⚠️  NOT IMPLEMENTED"
+                print(f"{i}. '{json_text[:40]}...' → {status}")
+                print("   Note: Complete the TODO sections to run this test")
+                continue
             status = "✅ PASSED" if expected == "SHOULD_PASS" else "❌ UNEXPECTED PASS"
             print(f"{i}. '{json_text[:40]}...' → {status}")
-            if expected == "SHOULD_PASS":
+            if expected == "SHOULD_PASS" and result:
                 # Show the (potentially fixed) result
                 try:
                     formatted = json.dumps(json.loads(result), indent=2)
                     print(f"   Result: {formatted[:100]}...")
                 except:
-                    print(f"   Result: {result[:60]}...")
+                    if result:
+                        print(f"   Result: {result[:60]}...")
         except ValidationError as e:
             status = "✅ BLOCKED" if expected == "SHOULD_FAIL" else "❌ UNEXPECTED BLOCK"
             print(f"{i}. '{json_text[:40]}...' → {status}")
@@ -250,7 +257,7 @@ if __name__ == "__main__":
     HINTS:
     ------
     - Use json.loads() to parse JSON and catch JSONDecodeError
-    - For fixing trailing commas: use re.sub(r',(\s*[}\]])', r'\1', text)
+    - For fixing trailing commas: use re.sub(r',(\\s*[}\\]])', r'\\1', text)
     - For single quotes: be careful about apostrophes! Simple replace works for basic cases
     - For unquoted keys: use regex to find {key: value} patterns
     - Always re-validate after fixing
