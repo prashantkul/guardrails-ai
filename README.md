@@ -21,6 +21,12 @@ This project provides two complementary learning experiences:
 - **Built-in Testing**: Validate your solutions with comprehensive test cases
 - **Complete Solutions**: Reference implementations for guidance
 
+### 🔧 **Custom Guardrails** - Production-Ready Validators
+- **Financial Compliance Validator**: Comprehensive regulatory compliance for financial content
+- **Professional Architecture**: Follows official Guardrails AI patterns with @register_validator
+- **Advanced Features**: Multi-stage validation, LLM integration, automatic fix suggestions
+- **Real-World Applications**: Ready for production use in fintech and investment platforms
+
 ## 🛠️ Setup
 
 ### Prerequisites
@@ -98,6 +104,39 @@ python3 tutorial_runner.py --solution 1    # See solution for Tutorial 1
 ```bash
 python3 tutorial_runner.py --progress
 ```
+
+### 🔧 **Custom Guardrails Demo**
+
+**View Available Validators** - See production-ready implementations:
+```bash
+cd guardrails_custom
+python demo_runner.py --list
+```
+
+**Run Financial Compliance Demo** - See comprehensive validation in action:
+```bash
+python demo_runner.py --validator financial
+```
+
+**Interactive Testing** - Test your own content:
+```bash
+python demo_runner.py --interactive
+```
+
+**Architecture Overview** - Learn validator design patterns:
+```bash
+python demo_runner.py --architecture
+```
+
+**Interactive Financial Advisor** - Create compliant financial content with AI assistance:
+```bash
+python interactive_financial_advisor.py
+```
+Features:
+- Real-time validation of financial content
+- AI-powered enhancement with proper disclaimers
+- Educational tips and compliant phrase examples
+- Save compliant content to file
 
 ## 📁 Project Structure
 
