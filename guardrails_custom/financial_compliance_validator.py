@@ -37,7 +37,7 @@ from guardrails.validator_base import (
     Validator,
     register_validator,
 )
-import requests
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -272,6 +272,7 @@ class FinancialComplianceValidator(Validator):
     def _llm_compliance_check(self, text: str) -> List[str]:
         """Use LLM for advanced financial compliance checking."""
         groq_api_key = os.getenv("GROQ_API_KEY")
+        groq_model = os.getenv("GROQ_MODEL", "llama3-8b-8192")
         if not groq_api_key:
             return []
         
@@ -293,28 +294,21 @@ class FinancialComplianceValidator(Validator):
         """
         
         try:
-            response = requests.post(
-                "https://api.groq.com/openai/v1/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {groq_api_key}",
-                    "Content-Type": "application/json"
-                },
-                json={
-                    "model": "llama3-8b-8192",
-                    "messages": [{"role": "user", "content": prompt}],
-                    "temperature": 0.1,
-                    "max_tokens": 300
-                },
-                timeout=10
+            # Initialize Groq client
+            client = Groq(api_key=groq_api_key)
+            
+            completion = client.chat.completions.create(
+                model=groq_model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.1,
+                max_tokens=300
             )
             
-            if response.status_code == 200:
-                result = response.json()
-                llm_response = result["choices"][0]["message"]["content"].strip()
-                
-                if llm_response.startswith("VIOLATIONS"):
-                    issues_text = llm_response.replace("VIOLATIONS:", "").strip()
-                    return [f"LLM detected: {issues_text}"]
+            llm_response = completion.choices[0].message.content.strip()
+            
+            if llm_response.startswith("VIOLATIONS"):
+                issues_text = llm_response.replace("VIOLATIONS:", "").strip()
+                return [f"LLM detected: {issues_text}"]
             
             return []
             

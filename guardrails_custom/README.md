@@ -196,27 +196,31 @@ python demo_runner.py --validator financial
 
 ## 🎯 Real-World Applications
 
-### Use Cases
+### Primary Use Case: LLM Output Validation
 
-1. **Investment Platforms**
-   - Validate user-generated investment advice
-   - Ensure forum posts are compliant
-   - Moderate financial discussions
+The Financial Compliance Validator is primarily designed to ensure AI-generated financial content is compliant before being shown to users.
 
-2. **Content Creation**
-   - Blog post compliance checking
-   - Newsletter validation
-   - Social media post verification
+### Key Applications
 
-3. **Fintech Applications**
-   - Robo-advisor communication compliance
-   - Trading app notification validation
-   - Investment recommendation checking
+1. **AI Financial Advisors**
+   - Validate LLM-generated investment advice before serving to users
+   - Ensure chatbot responses include required disclaimers
+   - Filter out prohibited guarantee language from AI outputs
 
-4. **Educational Platforms**
-   - Ensure course content includes disclaimers
-   - Validate instructor communications
-   - Check student forum posts
+2. **Automated Content Generation**
+   - Validate AI-written financial articles before publication
+   - Ensure AI-generated newsletters are compliant
+   - Check robo-advisor recommendations for regulatory compliance
+
+3. **Fintech AI Applications**
+   - Filter AI trading insights before displaying to users
+   - Validate AI market analysis for compliance
+   - Ensure AI-generated reports include risk warnings
+
+4. **Customer Support AI**
+   - Validate AI agent responses about financial products
+   - Ensure automated emails include proper disclaimers
+   - Check AI-generated FAQ responses for compliance
 
 ## 🔧 Configuration Options
 
@@ -250,39 +254,98 @@ FinancialComplianceValidator(
 
 ## 🔄 Integration Examples
 
-### With FastAPI
+### Primary Pattern: Validating LLM Output
+
 ```python
-from fastapi import FastAPI, HTTPException
+from openai import OpenAI
 from guardrails_custom.financial_compliance_validator import FinancialComplianceValidator
+
+client = OpenAI()
+validator = FinancialComplianceValidator()
+
+def get_financial_advice(user_question: str) -> str:
+    # 1. Get response from LLM
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": user_question}]
+    )
+    
+    llm_output = response.choices[0].message.content
+    
+    # 2. Validate LLM output BEFORE showing to user
+    result = validator._validate(llm_output, {})
+    
+    # 3. Return compliant version to user
+    if hasattr(result, 'error_message'):
+        # Use the auto-fixed version
+        return result.fix_value
+    else:
+        # Already compliant
+        return llm_output
+
+# Example usage
+user_question = "What stocks should I buy?"
+safe_response = get_financial_advice(user_question)
+# Response will always include disclaimers and avoid prohibited language
+```
+
+### With FastAPI (AI Chatbot Backend)
+```python
+from fastapi import FastAPI
+from guardrails_custom.financial_compliance_validator import FinancialComplianceValidator
+import openai
 
 app = FastAPI()
 validator = FinancialComplianceValidator()
 
-@app.post("/validate-content")
-async def validate_content(text: str):
-    result = validator._validate(text, {})
+@app.post("/chat")
+async def chat(message: str):
+    # Generate AI response
+    ai_response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": message}]
+    )
+    
+    llm_output = ai_response.choices[0].message.content
+    
+    # Validate and fix LLM output
+    result = validator._validate(llm_output, {})
+    
     if hasattr(result, 'error_message'):
-        raise HTTPException(400, detail=result.error_message)
-    return {"status": "compliant", "text": text}
+        # Return fixed version with compliance
+        return {"response": result.fix_value, "modified": True}
+    else:
+        # Return original (already compliant)
+        return {"response": llm_output, "modified": False}
 ```
 
-### With Streamlit
+### With Streamlit (AI Financial Assistant)
 ```python
 import streamlit as st
 from guardrails_custom.financial_compliance_validator import FinancialComplianceValidator
+import openai
 
 validator = FinancialComplianceValidator()
 
-st.title("Financial Content Validator")
-user_input = st.text_area("Enter financial content:")
+st.title("AI Financial Assistant")
+user_input = st.text_input("Ask a financial question:")
 
-if st.button("Validate"):
-    result = validator._validate(user_input, {})
-    if hasattr(result, 'error_message'):
-        st.error(f"❌ {result.error_message}")
-        st.success(f"✨ Suggestion: {result.fix_value}")
-    else:
-        st.success("✅ Content is compliant!")
+if st.button("Get Advice"):
+    with st.spinner("Generating response..."):
+        # Get LLM response
+        llm_response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": user_input}]
+        ).choices[0].message.content
+        
+        # Validate LLM output
+        result = validator._validate(llm_response, {})
+        
+        if hasattr(result, 'error_message'):
+            st.warning("⚠️ Response modified for compliance")
+            st.write(result.fix_value)
+        else:
+            st.write(llm_response)
 ```
 
 ## 🤝 Contributing

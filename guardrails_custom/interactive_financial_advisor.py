@@ -16,7 +16,7 @@ import sys
 import re
 from pathlib import Path
 from typing import Optional, Tuple
-import requests
+from groq import Groq
 from dotenv import load_dotenv
 
 # Add current directory to path for imports
@@ -42,6 +42,10 @@ class InteractiveFinancialAdvisor:
             use_llm_verification=False  # We'll use LLM for enhancement instead
         )
         self.groq_api_key = os.getenv("GROQ_API_KEY")
+        self.groq_model = os.getenv("GROQ_MODEL", "llama3-8b-8192")  # Default to llama3 if not set
+        
+        # Initialize Groq client
+        self.groq_client = Groq(api_key=self.groq_api_key) if self.groq_api_key else None
         
         # Educational compliance tips
         self.compliance_tips = [
@@ -69,30 +73,30 @@ class InteractiveFinancialAdvisor:
         while True:
             try:
                 print("\n" + "=" * 70)
-                print("📝 FINANCIAL CONTENT VALIDATOR")
+                print("🤖 AI FINANCIAL ADVISOR (with Compliance)")
                 print("=" * 70)
                 print("\nOptions:")
-                print("  1. Validate your financial content")
-                print("  2. Get AI help to make content compliant")
+                print("  1. Ask for financial advice (AI-generated & validated)")
+                print("  2. Validate your own financial content")
                 print("  3. See compliance tips")
                 print("  4. View example compliant phrases")
-                print("  5. Test with sample content")
+                print("  5. Test with sample questions")
                 print("  6. Exit")
                 
                 choice = input("\nSelect option (1-6): ").strip()
                 
                 if choice == "1":
-                    self._validate_user_content()
+                    self._get_ai_financial_advice()
                 elif choice == "2":
-                    self._enhance_with_ai()
+                    self._validate_user_content()
                 elif choice == "3":
                     self._show_compliance_tips()
                 elif choice == "4":
                     self._show_compliant_examples()
                 elif choice == "5":
-                    self._test_samples()
+                    self._test_sample_questions()
                 elif choice == "6":
-                    print("\n👋 Thank you for using the Financial Compliance Tool!")
+                    print("\n👋 Thank you for using the AI Financial Advisor!")
                     break
                 else:
                     print("❌ Invalid option. Please choose 1-6.")
@@ -103,17 +107,100 @@ class InteractiveFinancialAdvisor:
             except Exception as e:
                 print(f"❌ An error occurred: {e}")
     
+    def _get_ai_financial_advice(self):
+        """Get financial advice from AI and validate it for compliance."""
+        print("\n🤖 AI FINANCIAL ADVISOR")
+        print("-" * 50)
+        print("Ask any financial question (or 'back' to return):")
+        print("Examples: 'Should I invest in Tesla?', 'Is gold a good investment?'")
+        
+        question = input("\n❓ Your question: ").strip()
+        if question.lower() == 'back':
+            return
+        
+        if not self.groq_client:
+            print("\n⚠️  Groq API key not found. Please set GROQ_API_KEY in .env file")
+            return
+        
+        print("\n🤔 AI is thinking...")
+        
+        # Generate AI response using Groq SDK
+        prompt = f"""You are a financial advisor. Answer this question: {question}
+        
+        Provide helpful financial advice but be specific and actionable."""
+        
+        try:
+            completion = self.groq_client.chat.completions.create(
+                model=self.groq_model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.7,
+                max_tokens=500
+            )
+            
+            ai_advice = completion.choices[0].message.content.strip()
+            
+            print("\n📝 RAW AI RESPONSE:")
+            print("-" * 50)
+            print(ai_advice)
+            print("-" * 50)
+            
+            # Validate the AI response
+            print("\n🔍 Validating for compliance...")
+            validation_result = self.validator._validate(ai_advice, {})
+            
+            if hasattr(validation_result, 'error_message'):
+                print(f"\n⚠️  Compliance issues detected: {validation_result.error_message}")
+                print("\n✨ FIXED & COMPLIANT VERSION:")
+                print("=" * 50)
+                compliant_advice = validation_result.fix_value if validation_result.fix_value else self._rule_based_enhancement(ai_advice)
+                print(compliant_advice)
+                print("=" * 50)
+                
+                # Show what changed
+                print("\n📊 What was changed:")
+                if "guaranteed" in ai_advice.lower() and "guaranteed" not in compliant_advice.lower():
+                    print("  • Removed guaranteed return language")
+                if "not financial advice" not in ai_advice.lower() and "not financial advice" in compliant_advice.lower():
+                    print("  • Added required disclaimer")
+                if "will" in ai_advice.lower() and ("might" in compliant_advice.lower() or "could" in compliant_advice.lower()):
+                    print("  • Softened predictions with uncertainty language")
+                
+            else:
+                print("\n✅ AI response is already compliant!")
+                print("\n📝 COMPLIANT ADVICE:")
+                print("=" * 50)
+                print(ai_advice)
+                print("=" * 50)
+            
+            # Save the advice automatically
+            final_advice = compliant_advice if hasattr(validation_result, 'error_message') else ai_advice
+            
+            # Ask if user wants to save
+            save_choice = input("\n💾 Would you like to save this advice to a file? (y/n): ").strip().lower()
+            if save_choice == 'y':
+                self._save_to_file(f"Question: {question}\n\nAdvice:\n{final_advice}")
+            
+            # Return to main menu
+            print("\n↩️  Returning to main menu...")
+                
+        except Exception as e:
+            print(f"❌ Error getting AI advice: {e}")
+    
     def _show_welcome(self):
         """Display welcome message and introduction."""
         print("=" * 70)
-        print("🏦 INTERACTIVE FINANCIAL ADVISOR COMPLIANCE TOOL")
+        print("🏦 AI FINANCIAL ADVISOR WITH COMPLIANCE VALIDATION")
         print("=" * 70)
-        print("\nWelcome! This tool helps you create compliant financial content that:")
-        print("✅ Meets regulatory requirements (SEC/FINRA guidelines)")
-        print("✅ Includes proper disclaimers and risk warnings")
-        print("✅ Avoids prohibited language (guaranteed returns, etc.)")
-        print("✅ Uses appropriate uncertainty language for predictions")
-        print("\n💡 Tip: Always remember - financial content requires extra care!")
+        print("\nWelcome! This tool provides AI-generated financial advice that is:")
+        print("✅ Automatically validated for regulatory compliance")
+        print("✅ Enhanced with required disclaimers and risk warnings")
+        print("✅ Free from prohibited guarantee language")
+        print("✅ Properly hedged with uncertainty language")
+        print("\n💡 How it works:")
+        print("   1. You ask a financial question")
+        print("   2. AI generates advice")
+        print("   3. Validator ensures compliance")
+        print("   4. You receive safe, compliant advice")
     
     def _validate_user_content(self):
         """Validate user-provided financial content."""
@@ -164,7 +251,7 @@ class InteractiveFinancialAdvisor:
     
     def _enhance_content_with_llm(self, content: str, already_compliant: bool = False):
         """Use LLM to enhance content with proper compliance elements."""
-        if not self.groq_api_key:
+        if not self.groq_client:
             print("\n⚠️  Groq API key not found. Using rule-based enhancement instead.")
             enhanced = self._rule_based_enhancement(content)
             print("\n📝 Enhanced content (rule-based):")
@@ -202,61 +289,40 @@ class InteractiveFinancialAdvisor:
             """
         
         try:
-            response = requests.post(
-                "https://api.groq.com/openai/v1/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {self.groq_api_key}",
-                    "Content-Type": "application/json"
-                },
-                json={
-                    "model": "llama3-8b-8192",
-                    "messages": [{"role": "user", "content": prompt}],
-                    "temperature": 0.3,
-                    "max_tokens": 500
-                },
-                timeout=10
+            completion = self.groq_client.chat.completions.create(
+                model=self.groq_model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.3,
+                max_tokens=500
             )
             
-            if response.status_code == 200:
-                result = response.json()
-                enhanced_content = result["choices"][0]["message"]["content"].strip()
-                
-                print("\n✨ AI-ENHANCED COMPLIANT VERSION:")
-                print("=" * 50)
+            enhanced_content = completion.choices[0].message.content.strip()
+            
+            print("\n✨ AI-ENHANCED COMPLIANT VERSION:")
+            print("=" * 50)
+            print(enhanced_content)
+            print("=" * 50)
+            
+            # Validate the enhanced version
+            print("\n🔍 Validating enhanced content...")
+            validation_result = self.validator._validate(enhanced_content, {})
+            
+            if hasattr(validation_result, 'error_message'):
+                print("⚠️  Enhanced content still has issues. Applying additional fixes...")
+                # Apply additional rule-based fixes
+                enhanced_content = self._rule_based_enhancement(enhanced_content)
+                print("\n📝 Final enhanced version:")
                 print(enhanced_content)
-                print("=" * 50)
-                
-                # Validate the enhanced version
-                print("\n🔍 Validating enhanced content...")
-                validation_result = self.validator._validate(enhanced_content, {})
-                
-                if hasattr(validation_result, 'error_message'):
-                    print("⚠️  Enhanced content still has issues. Applying additional fixes...")
-                    # Apply additional rule-based fixes
-                    enhanced_content = self._rule_based_enhancement(enhanced_content)
-                    print("\n📝 Final enhanced version:")
-                    print(enhanced_content)
-                else:
-                    print("✅ Enhanced content is fully compliant!")
-                
-                # Offer to copy or save
-                print("\n💾 Options:")
-                print("  1. Copy to clipboard (if supported)")
-                print("  2. Save to file")
-                print("  3. Continue")
-                
-                save_choice = input("\nSelect option (1-3): ").strip()
-                if save_choice == "2":
-                    self._save_to_file(enhanced_content)
-                elif save_choice == "1":
-                    print("📋 Copy the text above manually (clipboard integration varies by system)")
-                
             else:
-                print(f"❌ API error: {response.status_code}")
-                print("Using rule-based enhancement instead...")
-                enhanced = self._rule_based_enhancement(content)
-                print("\n📝 Enhanced content (rule-based):")
-                print(enhanced)
+                print("✅ Enhanced content is fully compliant!")
+            
+            # Ask if user wants to save
+            save_choice = input("\n💾 Would you like to save this enhanced content to a file? (y/n): ").strip().lower()
+            if save_choice == 'y':
+                self._save_to_file(enhanced_content)
+            
+            # Return to main menu
+            print("\n↩️  Returning to main menu...")
                 
         except Exception as e:
             print(f"❌ Error calling LLM: {e}")
@@ -269,22 +335,7 @@ class InteractiveFinancialAdvisor:
         """Apply rule-based enhancements for compliance."""
         enhanced = content
         
-        # Check if it needs disclaimers
-        has_advice = any(
-            re.search(pattern, content.lower()) 
-            for pattern in self.validator.advice_indicators
-        )
-        
-        has_disclaimer = any(
-            disclaimer in content.lower() 
-            for disclaimer in self.validator.disclaimer_keywords
-        )
-        
-        # Add disclaimer if missing and has advice
-        if has_advice and not has_disclaimer:
-            enhanced += "\n\nDisclaimer: This is not financial advice. Please consult with a qualified financial professional before making any investment decisions. Past performance does not guarantee future results."
-        
-        # Soften guaranteed language
+        # Soften guaranteed language first
         enhanced = re.sub(r'\bguarantee[sd]?\b', 'potentially', enhanced, flags=re.IGNORECASE)
         enhanced = re.sub(r'\bcannot lose\b', 'may have lower risk', enhanced, flags=re.IGNORECASE)
         enhanced = re.sub(r'\brisk[- ]free\b', 'lower risk', enhanced, flags=re.IGNORECASE)
@@ -293,6 +344,23 @@ class InteractiveFinancialAdvisor:
         # Soften predictions
         enhanced = re.sub(r'\bwill hit\b', 'could potentially reach', enhanced, flags=re.IGNORECASE)
         enhanced = re.sub(r'\bwill be worth\b', 'might be valued at', enhanced, flags=re.IGNORECASE)
+        enhanced = re.sub(r'\bwill double\b', 'could potentially increase', enhanced, flags=re.IGNORECASE)
+        enhanced = re.sub(r'\bwill\b', 'might', enhanced, flags=re.IGNORECASE)
+        
+        # Check if it needs disclaimers - check both original and enhanced content
+        has_financial_terms = any(
+            keyword in enhanced.lower() 
+            for keyword in ['invest', 'stock', 'profit', 'money', 'buy', 'sell', 'trading', 'portfolio']
+        )
+        
+        has_disclaimer = any(
+            disclaimer in enhanced.lower() 
+            for disclaimer in self.validator.disclaimer_keywords
+        )
+        
+        # Always add disclaimer if it's financial content without one
+        if has_financial_terms and not has_disclaimer:
+            enhanced += "\n\nDisclaimer: This is not financial advice. Please consult with a qualified financial professional before making any investment decisions. Past performance does not guarantee future results."
         
         return enhanced
     
@@ -330,30 +398,36 @@ class InteractiveFinancialAdvisor:
         print("  • 'Seek advice from a licensed investment advisor'")
         print("  • 'Discuss with your financial planner'")
     
-    def _test_samples(self):
-        """Test with sample content."""
-        print("\n🧪 SAMPLE CONTENT TESTS")
+    def _test_sample_questions(self):
+        """Test with sample financial questions."""
+        print("\n🧪 SAMPLE QUESTIONS & AI RESPONSES")
         print("=" * 50)
         
-        samples = [
-            ("Buy AAPL stock now - guaranteed 50% returns!", "Non-compliant: Guaranteed returns + direct advice"),
-            ("Consider diversifying your portfolio. Not financial advice.", "Compliant: Has disclaimer"),
-            ("Tesla will hit $500 next month!", "Non-compliant: Specific prediction"),
-            ("Market analysis suggests potential growth opportunities.", "Compliant: Uses uncertainty language"),
-            ("This risk-free investment cannot lose money.", "Non-compliant: Risk-free claims")
+        sample_questions = [
+            "Should I invest all my savings in Tesla stock?",
+            "What's a guaranteed way to double my money?",
+            "Is cryptocurrency a good investment for retirement?",
+            "Should I buy or rent a house in this market?",
+            "How can I get rich quickly with stocks?"
         ]
         
-        for i, (content, description) in enumerate(samples, 1):
-            print(f"\n{i}. {description}")
-            print(f"   Content: '{content}'")
-            
-            result = self.validator._validate(content, {})
-            if hasattr(result, 'error_message'):
-                print(f"   Status: ❌ Failed - {result.error_message}")
-            else:
-                print(f"   Status: ✅ Passed")
+        print("\nExample questions you can ask:")
+        for i, question in enumerate(sample_questions, 1):
+            print(f"{i}. {question}")
         
-        print("\n💡 Try option 2 to see how AI can fix non-compliant content!")
+        print("\n💡 These questions will generate AI advice that gets validated for compliance.")
+        print("   Try option 1 to ask your own questions!")
+        
+        # Show a demo of what happens
+        print("\n" + "-" * 50)
+        print("DEMO: What happens when you ask a question:")
+        print("-" * 50)
+        print("Question: 'Should I buy Bitcoin?'")
+        print("\n1️⃣ AI might say: 'Bitcoin will definitely double in value next month!'")
+        print("2️⃣ Validator detects: Specific prediction without uncertainty")  
+        print("3️⃣ Fixed version: 'Bitcoin could potentially see growth, though cryptocurrency")
+        print("   is highly volatile. This is not financial advice. Consult a professional.'")
+        print("\n✅ You receive the compliant version!")
     
     def _get_multiline_input(self) -> str:
         """Get multiline input from user."""
