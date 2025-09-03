@@ -147,10 +147,10 @@ class InteractiveFinancialAdvisor:
             
             ai_advice = completion.choices[0].message.content.strip()
             
-            print("\n📝 RAW AI RESPONSE:")
-            print("-" * 50)
-            print(ai_advice)
-            print("-" * 50)
+            print(f"\n{self.CYAN}📝 RAW AI RESPONSE:{self.END}")
+            print(f"{self.CYAN}{'─' * 60}{self.END}")
+            print(f"{ai_advice}")
+            print(f"{self.CYAN}{'─' * 60}{self.END}")
             
             # Validate the AI response
             print("\n🔍 Validating for compliance...")
@@ -220,29 +220,32 @@ class InteractiveFinancialAdvisor:
         if content.lower() == 'back':
             return
         
-        print("\n🔍 Validating content...")
+        print(f"\n{self.CYAN}🔍 Validating content...{self.END}")
         result = self.validator._validate(content, {})
         
         if hasattr(result, 'error_message'):
             # Failed validation
-            print("\n❌ VALIDATION FAILED")
-            print(f"Issues found: {result.error_message}")
+            print(f"\n{self.RED}❌ VALIDATION FAILED{self.END}")
+            print(f"{self.YELLOW}Issues found:{self.END}")
+            print(f"  • {result.error_message}")
             
             if hasattr(result, 'fix_value') and result.fix_value:
-                print("\n✨ Quick fix suggestion:")
-                print(f"'{result.fix_value}'")
+                print(f"\n{self.GREEN}✨ Quick fix suggestion:{self.END}")
+                print(f"{self.GREEN}{'─' * 60}{self.END}")
+                print(f"{self.BOLD}{result.fix_value}{self.END}")
+                print(f"{self.GREEN}{'─' * 60}{self.END}")
             
-            print("\n💡 Would you like me to enhance this with AI? (y/n)")
-            if input().strip().lower() == 'y':
+            enhance_choice = input(f"\n{self.YELLOW}💡 Would you like me to enhance this with AI? (y/n): {self.END}").strip().lower()
+            if enhance_choice == 'y':
                 self._enhance_content_with_llm(content)
         else:
             # Passed validation
-            print("\n✅ VALIDATION PASSED")
-            print("Your content meets financial compliance requirements!")
+            print(f"\n{self.GREEN}✅ VALIDATION PASSED{self.END}")
+            print(f"{self.GREEN}Your content meets financial compliance requirements!{self.END}")
             
             # Still offer enhancement
-            print("\n💭 Would you like to enhance it further with AI? (y/n)")
-            if input().strip().lower() == 'y':
+            enhance_choice = input(f"\n{self.YELLOW}💭 Would you like to enhance it further with AI? (y/n): {self.END}").strip().lower()
+            if enhance_choice == 'y':
                 self._enhance_content_with_llm(content, already_compliant=True)
     
     def _enhance_with_ai(self):
@@ -306,23 +309,25 @@ class InteractiveFinancialAdvisor:
             
             enhanced_content = completion.choices[0].message.content.strip()
             
-            print("\n✨ AI-ENHANCED COMPLIANT VERSION:")
-            print("=" * 50)
-            print(enhanced_content)
-            print("=" * 50)
+            print(f"\n{self.GREEN}✨ AI-ENHANCED COMPLIANT VERSION:{self.END}")
+            print(f"{self.GREEN}{'═' * 60}{self.END}")
+            print(f"{self.BOLD}{enhanced_content}{self.END}")
+            print(f"{self.GREEN}{'═' * 60}{self.END}")
             
             # Validate the enhanced version
-            print("\n🔍 Validating enhanced content...")
+            print(f"\n{self.CYAN}🔍 Validating enhanced content...{self.END}")
             validation_result = self.validator._validate(enhanced_content, {})
             
             if hasattr(validation_result, 'error_message'):
-                print("⚠️  Enhanced content still has issues. Applying additional fixes...")
+                print(f"{self.YELLOW}⚠️  Enhanced content still has issues. Applying additional fixes...{self.END}")
                 # Apply additional rule-based fixes
                 enhanced_content = self._rule_based_enhancement(enhanced_content)
-                print("\n📝 Final enhanced version:")
-                print(enhanced_content)
+                print(f"\n{self.GREEN}📝 Final enhanced version:{self.END}")
+                print(f"{self.GREEN}{'─' * 60}{self.END}")
+                print(f"{self.BOLD}{enhanced_content}{self.END}")
+                print(f"{self.GREEN}{'─' * 60}{self.END}")
             else:
-                print("✅ Enhanced content is fully compliant!")
+                print(f"{self.GREEN}✅ Enhanced content is fully compliant!{self.END}")
             
             # Ask if user wants to save
             save_choice = input("\n💾 Would you like to save this enhanced content to a file? (y/n): ").strip().lower()
