@@ -32,6 +32,14 @@ load_dotenv()
 class InteractiveFinancialAdvisor:
     """Interactive tool for creating compliant financial content."""
     
+    # Simple color codes
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    BOLD = '\033[1m'
+    END = '\033[0m'
+    
     def __init__(self):
         """Initialize the interactive advisor."""
         self.validator = FinancialComplianceValidator(
@@ -72,18 +80,18 @@ class InteractiveFinancialAdvisor:
         
         while True:
             try:
-                print("\n" + "=" * 70)
-                print("🤖 AI FINANCIAL ADVISOR (with Compliance)")
-                print("=" * 70)
-                print("\nOptions:")
-                print("  1. Ask for financial advice (AI-generated & validated)")
-                print("  2. Validate your own financial content")
-                print("  3. See compliance tips")
-                print("  4. View example compliant phrases")
-                print("  5. Test with sample questions")
-                print("  6. Exit")
+                print(f"\n{self.CYAN}{'=' * 70}{self.END}")
+                print(f"{self.BOLD}{self.CYAN}🤖 AI FINANCIAL ADVISOR (with Compliance){self.END}")
+                print(f"{self.CYAN}{'=' * 70}{self.END}")
+                print(f"\n{self.BOLD}Options:{self.END}")
+                print(f"  {self.GREEN}1.{self.END} Ask for financial advice (AI-generated & validated)")
+                print(f"  {self.GREEN}2.{self.END} Validate your own financial content")
+                print(f"  {self.GREEN}3.{self.END} See compliance tips")
+                print(f"  {self.GREEN}4.{self.END} View example compliant phrases")
+                print(f"  {self.GREEN}5.{self.END} Test with sample questions")
+                print(f"  {self.RED}6.{self.END} Exit")
                 
-                choice = input("\nSelect option (1-6): ").strip()
+                choice = input(f"\n{self.YELLOW}Select option (1-6): {self.END}").strip()
                 
                 if choice == "1":
                     self._get_ai_financial_advice()
@@ -99,13 +107,13 @@ class InteractiveFinancialAdvisor:
                     print("\n👋 Thank you for using the AI Financial Advisor!")
                     break
                 else:
-                    print("❌ Invalid option. Please choose 1-6.")
+                    print(f"{self.RED}❌ Invalid option. Please choose 1-6.{self.END}")
                     
             except KeyboardInterrupt:
-                print("\n\n👋 Interrupted by user. Goodbye!")
+                print(f"\n\n{self.YELLOW}👋 Interrupted by user. Goodbye!{self.END}")
                 break
             except Exception as e:
-                print(f"❌ An error occurred: {e}")
+                print(f"{self.RED}❌ An error occurred: {e}{self.END}")
     
     def _get_ai_financial_advice(self):
         """Get financial advice from AI and validate it for compliance."""
@@ -114,12 +122,12 @@ class InteractiveFinancialAdvisor:
         print("Ask any financial question (or 'back' to return):")
         print("Examples: 'Should I invest in Tesla?', 'Is gold a good investment?'")
         
-        question = input("\n❓ Your question: ").strip()
+        question = input(f"\n{self.YELLOW}❓ Your question: {self.END}").strip()
         if question.lower() == 'back':
             return
         
         if not self.groq_client:
-            print("\n⚠️  Groq API key not found. Please set GROQ_API_KEY in .env file")
+            print(f"\n{self.YELLOW}⚠️  Groq API key not found. Please set GROQ_API_KEY in .env file{self.END}")
             return
         
         print("\n🤔 AI is thinking...")
@@ -149,12 +157,12 @@ class InteractiveFinancialAdvisor:
             validation_result = self.validator._validate(ai_advice, {})
             
             if hasattr(validation_result, 'error_message'):
-                print(f"\n⚠️  Compliance issues detected: {validation_result.error_message}")
-                print("\n✨ FIXED & COMPLIANT VERSION:")
-                print("=" * 50)
+                print(f"\n{self.YELLOW}⚠️  Compliance issues detected: {validation_result.error_message}{self.END}")
+                print(f"\n{self.GREEN}✨ FIXED & COMPLIANT VERSION:{self.END}")
+                print(f"{self.GREEN}{'=' * 50}{self.END}")
                 compliant_advice = validation_result.fix_value if validation_result.fix_value else self._rule_based_enhancement(ai_advice)
-                print(compliant_advice)
-                print("=" * 50)
+                print(f"{self.BOLD}{compliant_advice}{self.END}")
+                print(f"{self.GREEN}{'=' * 50}{self.END}")
                 
                 # Show what changed
                 print("\n📊 What was changed:")
@@ -166,11 +174,11 @@ class InteractiveFinancialAdvisor:
                     print("  • Softened predictions with uncertainty language")
                 
             else:
-                print("\n✅ AI response is already compliant!")
-                print("\n📝 COMPLIANT ADVICE:")
-                print("=" * 50)
-                print(ai_advice)
-                print("=" * 50)
+                print(f"\n{self.GREEN}✅ AI response is already compliant!{self.END}")
+                print(f"\n{self.GREEN}📝 COMPLIANT ADVICE:{self.END}")
+                print(f"{self.GREEN}{'=' * 50}{self.END}")
+                print(f"{self.BOLD}{ai_advice}{self.END}")
+                print(f"{self.GREEN}{'=' * 50}{self.END}")
             
             # Save the advice automatically
             final_advice = compliant_advice if hasattr(validation_result, 'error_message') else ai_advice
@@ -184,19 +192,19 @@ class InteractiveFinancialAdvisor:
             print("\n↩️  Returning to main menu...")
                 
         except Exception as e:
-            print(f"❌ Error getting AI advice: {e}")
+            print(f"{self.RED}❌ Error getting AI advice: {e}{self.END}")
     
     def _show_welcome(self):
         """Display welcome message and introduction."""
-        print("=" * 70)
-        print("🏦 AI FINANCIAL ADVISOR WITH COMPLIANCE VALIDATION")
-        print("=" * 70)
-        print("\nWelcome! This tool provides AI-generated financial advice that is:")
-        print("✅ Automatically validated for regulatory compliance")
-        print("✅ Enhanced with required disclaimers and risk warnings")
-        print("✅ Free from prohibited guarantee language")
-        print("✅ Properly hedged with uncertainty language")
-        print("\n💡 How it works:")
+        print(f"{self.CYAN}{'=' * 70}{self.END}")
+        print(f"{self.BOLD}{self.CYAN}🏦 AI FINANCIAL ADVISOR WITH COMPLIANCE VALIDATION{self.END}")
+        print(f"{self.CYAN}{'=' * 70}{self.END}")
+        print(f"\n{self.BOLD}Welcome! This tool provides AI-generated financial advice that is:{self.END}")
+        print(f"{self.GREEN}✅ Automatically validated for regulatory compliance{self.END}")
+        print(f"{self.GREEN}✅ Enhanced with required disclaimers and risk warnings{self.END}")
+        print(f"{self.GREEN}✅ Free from prohibited guarantee language{self.END}")
+        print(f"{self.GREEN}✅ Properly hedged with uncertainty language{self.END}")
+        print(f"\n{self.YELLOW}💡 How it works:{self.END}")
         print("   1. You ask a financial question")
         print("   2. AI generates advice")
         print("   3. Validator ensures compliance")
