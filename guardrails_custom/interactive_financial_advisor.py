@@ -216,7 +216,7 @@ class InteractiveFinancialAdvisor:
         print("-" * 50)
         print("Enter your financial content (or 'back' to return):")
         
-        content = self._get_multiline_input()
+        content = input(f"{self.YELLOW}> {self.END}").strip()
         if content.lower() == 'back':
             return
         
@@ -251,7 +251,7 @@ class InteractiveFinancialAdvisor:
         print("-" * 50)
         print("Enter your financial content to enhance (or 'back' to return):")
         
-        content = self._get_multiline_input()
+        content = input(f"{self.YELLOW}> {self.END}").strip()
         if content.lower() == 'back':
             return
         
@@ -436,22 +436,6 @@ class InteractiveFinancialAdvisor:
         print("3️⃣ Fixed version: 'Bitcoin could potentially see growth, though cryptocurrency")
         print("   is highly volatile. This is not financial advice. Consult a professional.'")
         print("\n✅ You receive the compliant version!")
-    
-    def _get_multiline_input(self) -> str:
-        """Get multiline input from user."""
-        print("(Enter your text, then press Enter twice to submit)")
-        lines = []
-        empty_line_count = 0
-        
-        while empty_line_count < 1:
-            line = input()
-            if line == "":
-                empty_line_count += 1
-            else:
-                empty_line_count = 0
-                lines.append(line)
-        
-        return "\n".join(lines)
     
     def _save_to_file(self, content: str):
         """Save content to a file."""
