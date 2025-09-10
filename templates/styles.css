@@ -1,0 +1,87 @@
+/* Global Styles */
+.gradio-container {
+    max-width: 1400px;
+    margin: auto;
+}
+
+.validation-box {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+/* Status Classes */
+.status-good { color: #28a745; }
+.status-warning { color: #ffc107; }
+.status-error { color: #dc3545; }
+
+/* Compliance Analysis Styles */
+.compliance-container {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.compliance-header {
+    color: #495057;
+    margin-top: 0;
+}
+
+.compliance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.original-content {
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.compliant-content {
+    background: #f0fff4;
+    border: 1px solid #c6f6d5;
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.changes-section {
+    background: #e3f2fd;
+    border: 1px solid #bbdefb;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+/* Highlighting Classes */
+.highlight-problematic {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.highlight-enhanced {
+    background-color: #4caf50;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.highlight-softened {
+    background-color: #2196f3;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+}

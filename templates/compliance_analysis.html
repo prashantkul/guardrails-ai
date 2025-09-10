@@ -1,0 +1,175 @@
+<!-- Comprehensive compliance analysis template -->
+{% extends "base.html" %}
+
+{% block styles %}
+.compliance-container {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.compliance-header {
+    color: #495057;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.compliance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+    .compliance-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.content-box {
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 80px;
+}
+
+.original-content {
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+}
+
+.compliant-content {
+    background: #f0fff4;
+    border: 1px solid #c6f6d5;
+}
+
+.changes-section {
+    background: #e3f2fd;
+    border: 1px solid #bbdefb;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.metadata-section {
+    margin-top: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.stat-item {
+    background: white;
+    padding: 8px;
+    border-radius: 4px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+{% endblock %}
+
+{% block content %}
+<div class="compliance-container">
+    <h4 class="compliance-header">
+        <span>📊</span>
+        <span>{{ title | default("Compliance Enhancement Analysis") }}</span>
+        {% if analysis_type %}
+        <span style="background: #e3f2fd; color: #1976d2; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: normal;">
+            {{ analysis_type }}
+        </span>
+        {% endif %}
+    </h4>
+    
+    {% if summary %}
+    <p style="color: #495057; font-style: italic; margin-bottom: 15px;">{{ summary }}</p>
+    {% endif %}
+    
+    <div class="compliance-grid">
+        <div>
+            <h5 style="color: #dc3545; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                <span>❌</span>
+                <span>{{ original_label | default("Original Response") }}</span>
+            </h5>
+            <div class="content-box original-content">
+                {{ original_content | highlight_problematic | safe }}
+            </div>
+            <div style="display: flex; justify-content: between; font-size: 12px; color: #6c757d; margin-top: 5px;">
+                <span>Length: {{ original_content | length }} chars</span>
+                {% if word_count %}
+                <span>Words: {{ original_content.split() | length }}</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div>
+            <h5 style="color: #28a745; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                <span>✅</span>
+                <span>{{ compliant_label | default("Compliant Version") }}</span>
+            </h5>
+            <div class="content-box compliant-content">
+                {{ compliant_content | highlight_enhanced | safe }}
+            </div>
+            <div style="display: flex; justify-content: between; font-size: 12px; color: #6c757d; margin-top: 5px;">
+                <span>Length: {{ compliant_content | length }} chars</span>
+                {% if word_count %}
+                <span>Words: {{ compliant_content.split() | length }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    {% if changes_analysis %}
+    <div class="changes-section">
+        <h6 style="color: #1976d2; margin-top: 0; display: flex; align-items: center; gap: 8px;">
+            <span>🔧</span>
+            <span>Changes Made for Compliance:</span>
+        </h6>
+        {{ changes_analysis | safe }}
+    </div>
+    {% endif %}
+    
+    {% if statistics %}
+    <div class="stats-grid">
+        {% for stat in statistics %}
+        <div class="stat-item">
+            <div style="font-weight: bold; color: #495057;">{{ stat.value }}</div>
+            <div style="font-size: 11px; color: #6c757d;">{{ stat.label }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if metadata %}
+    <div class="metadata-section">
+        <strong>Analysis Details:</strong>
+        <div style="margin-top: 5px;">
+            {% if metadata.timestamp %}
+            <span><strong>Generated:</strong> {{ metadata.timestamp }}</span><br>
+            {% endif %}
+            {% if metadata.mode %}
+            <span><strong>Compliance Mode:</strong> {{ metadata.mode }}</span><br>
+            {% endif %}
+            {% if metadata.processing_time %}
+            <span><strong>Processing Time:</strong> {{ metadata.processing_time }}ms</span><br>
+            {% endif %}
+            {% if metadata.validator_version %}
+            <span><strong>Validator:</strong> v{{ metadata.validator_version }}</span>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

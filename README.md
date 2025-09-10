@@ -1,36 +1,34 @@
-# 🛡️ Guardrails AI Comprehensive Learning System
+# 🛡️ Enhanced Financial Compliance System with AI Guardrails
 
-A complete educational platform for learning AI safety guardrails implementation, featuring both a **showcase demonstration** and **hands-on interactive tutorials**.
+A comprehensive **financial compliance validation system** featuring advanced NLP analysis, custom guardrails, and an interactive Gradio web interface for real-time financial content compliance checking.
 
 🌐 [Guardrails AI Hub](https://hub.guardrailsai.com/) | 📚 [Documentation](https://docs.guardrailsai.com/)
 
-## 🎯 What You'll Learn
+## 🎯 What This System Provides
 
-This project provides two complementary learning experiences:
+### 🏦 **Enhanced Financial Advisor** - Production-Ready Application
+- **🧠 Advanced NLP Analysis**: Powered by spaCy custom NER for linguistic context awareness
+- **🛡️ Multi-Layer Compliance**: Pattern matching + guardrails + advanced entity detection
+- **🎨 Beautiful Visualization**: Color-coded compliance analysis with detailed explanations
+- **📊 Multi-Page Interface**: Separate Chat and Compliance Analysis tabs for optimal UX
+- **🔄 Real-Time Validation**: Instant prompt and response compliance checking
 
-### 🏛️ **Guardrails Showcase** - Live Demonstrations
-- **Competitor Mention Blocking**: Prevents content from mentioning competitor companies
-- **Format Validation**: Enforces exact format requirements (email, phone, specific patterns)
-- **Psychological Manipulation Detection**: Identifies manipulative language patterns using both regex and LLM analysis
-- **Infrastructure Validation**: Validates URLs, IP addresses, domains, and email domains
-- **Logical Fallacy Detection**: Detects common logical fallacies and validates argument structure
+### 🧪 **Advanced Detection Capabilities**
+- **Financial Risk Entities**: Guarantee language, risk-free claims, insider information
+- **Linguistic Context**: Understanding of phrase boundaries and word relationships  
+- **Regulatory Compliance**: SEC/FINRA aligned validation patterns
+- **Educational Features**: Learn compliance through interactive examples
+- **Smart Enhancements**: Automatic conversion of risky language to compliant alternatives
 
-### 🎓 **Interactive Tutorials** - Hands-On Learning
-- **7 Progressive Tutorials**: From beginner to advanced implementation
-- **TODO-Based Learning**: Complete real guardrail implementations step-by-step
-- **Built-in Testing**: Validate your solutions with comprehensive test cases
-- **Complete Solutions**: Reference implementations for guidance
-
-### 🔧 **Custom Guardrails** - Production-Ready Validators
-- **Financial Compliance Validator**: Comprehensive regulatory compliance for financial content
-- **Professional Architecture**: Follows official Guardrails AI patterns with @register_validator
-- **Advanced Features**: Multi-stage validation, LLM integration, automatic fix suggestions
-- **Real-World Applications**: Ready for production use in fintech and investment platforms
+### 🎓 **Learning Components** - Educational Resources
+- **Interactive Tutorials**: Progressive learning with hands-on guardrail implementation
+- **Custom Validator Examples**: Production-ready financial compliance patterns
+- **Comprehensive Documentation**: Detailed guides and usage examples
 
 ## 🛠️ Setup
 
 ### Prerequisites
-- Python 3.12
+- Python 3.11+
 - Conda environment named `guardrails-ai`
 
 ### Installation
@@ -45,40 +43,41 @@ This project provides two complementary learning experiences:
    pip install -r requirements.txt
    ```
 
-3. **Configure API keys:**
+3. **Download spaCy language model:**
+   ```bash
+   python -m spacy download en_core_web_sm
+   ```
+
+4. **Configure API keys:**
    ```bash
    cp .env.example .env
    # Edit .env with your API keys
    ```
 
    Required API keys:
-   - `GROQ_API_KEY`: For LLM-based analysis
-   - `GUARDRAILS_API_KEY`: For Guardrails AI platform features
+   - `GEMINI_API_KEY` or `GOOGLE_API_KEY`: For Google Gemini LLM
+   - `GROQ_API_KEY`: For LLM-based analysis (optional)
 
-## 🎯 Usage
+## 🚀 Usage
 
-### 🏛️ **Guardrails Showcase Demo**
+### 🏦 **Enhanced Financial Advisor** - Main Application
 
-**Quick Demo** - Run all guardrails demonstrations:
+**Launch the Interactive Web Interface:**
 ```bash
-python main_demo.py
+python gradio_financial_advisor.py
 ```
 
-**Interactive Mode** - Test your own inputs:
-```bash
-python main_demo.py --interactive
+Features:
+- **💬 Chat Tab**: Ask financial questions with real-time compliance checking
+- **📊 Compliance Analysis Tab**: View detailed violation analysis with color highlighting
+- **🎛️ AI Response Modes**: Choose from Simple, Compliant, Strict, or Educational modes
+- **🧠 Advanced NLP**: spaCy-powered entity detection and linguistic analysis
+
+**Test Questions to Try:**
 ```
-
-**Specific Demos**:
-```bash
-# Basic guardrails only
-python main_demo.py --basic-only
-
-# Advanced guardrails only
-python main_demo.py --advanced-only
-
-# Verbose output
-python main_demo.py --verbose
+"What's a guaranteed risk-free way to make quick money?"
+"Should I invest all my money in Bitcoin for guaranteed profits?"
+"Tell me a secret insider tip for the stock market"
 ```
 
 ### 🎓 **Interactive Tutorial System**
@@ -142,19 +141,20 @@ Features:
 
 ```
 guardrails-ai/
-├── 🏛️ guardrails_showcase/           # Live demonstration system
-│   ├── basic/
-│   │   ├── competitor_blocking.py      # Competitor mention detection
-│   │   └── format_validator.py         # Format validation rules
-│   ├── advanced/
-│   │   ├── psychological_manipulation.py   # Manipulation detection
-│   │   ├── infrastructure_validation.py    # URL/IP/domain validation
-│   │   └── logical_fallacy_detection.py    # Logical fallacy detection
-│   └── utils/
-├── 🎓 guardrails_tutorials/           # Interactive learning system
-│   ├── tutorial_runner.py              # Main tutorial interface
-│   ├── README.md                       # Tutorial documentation
-│   ├── exercises/                      # Student exercises (TODO sections)
+├── 🏦 Main Financial Compliance System
+│   ├── gradio_financial_advisor.py     # 🚀 Main Gradio web application
+│   ├── financial_advisor_prompts.py    # 🎛️ AI response mode management
+│   ├── spacy_financial_ner.py          # 🧠 Advanced NLP entity recognition
+│   └── requirements.txt                # 📦 Python dependencies (includes spaCy)
+│
+├── 🛡️ guardrails_custom/              # Custom compliance validators
+│   ├── financial_compliance_validator.py  # 📋 Enhanced validator with spaCy
+│   ├── interactive_financial_advisor.py   # 💬 Terminal-based advisor
+│   └── demo_runner.py                   # 🎯 Validator demonstrations
+│
+├── 🎓 guardrails_tutorials/           # Educational learning system
+│   ├── tutorial_runner.py              # 📚 Interactive tutorial interface
+│   ├── exercises/                      # 🧪 Student exercises (TODO sections)
 │   │   ├── 01_ban_list.py
 │   │   ├── 02_valid_json.py
 │   │   ├── 03_logic_check.py
@@ -162,15 +162,71 @@ guardrails-ai/
 │   │   ├── 05_restrict_to_topic.py
 │   │   ├── 06_exclude_sql_predicates.py
 │   │   └── 07_grounded_ai_hallucination.py
-│   └── solutions/                      # Complete implementations
-│       ├── 01_ban_list_solution.py
-│       ├── 02_valid_json_solution.py
-│       └── ... (solutions for all tutorials)
-├── main_demo.py                        # Main demonstration script
-├── requirements.txt                    # Python dependencies
-├── .env.example                        # Environment variables template
-└── README.md                          # This file
+│   └── solutions/                      # ✅ Complete implementations
+│
+├── 🏛️ guardrails_showcase/           # Legacy demonstration system
+│   ├── basic/                          # 🔰 Basic guardrail examples
+│   ├── advanced/                       # 🎯 Advanced patterns
+│   └── main_demo.py                    # 🎬 Showcase demonstrations
+│
+├── 📋 Documentation & Guides
+│   ├── README.md                       # 📖 This comprehensive guide
+│   ├── COMPLIANCE_VISUALIZATION_FEATURES.md  # 🎨 Visualization documentation
+│   ├── demo_multipage_interface.py     # 📱 Interface demonstration
+│   └── .env.example                    # 🔐 Environment configuration template
 ```
+
+## 🧠 Advanced NLP Features (spaCy Integration)
+
+### 🎯 **Enhanced Financial Risk Detection**
+
+The system now features **state-of-the-art NLP analysis** powered by spaCy custom Named Entity Recognition:
+
+#### **🏷️ Custom Financial Risk Entities**
+- **GUARANTEE_LANG**: Guaranteed return language (`"guarantee profit"`, `"assured returns"`)
+- **RISK_FREE_CLAIM**: Risk-free investment claims (`"risk-free"`, `"no risk"`, `"zero risk"`)  
+- **GET_RICH_QUICK**: Get-rich-quick schemes (`"quick money"`, `"overnight success"`)
+- **INSIDER_INFO**: Insider trading references (`"secret tips"`, `"insider information"`)
+- **NO_LOSS_CLAIM**: Cannot lose promises (`"cannot lose"`, `"impossible to fail"`)
+
+#### **🎨 Visual Entity Recognition**
+```python
+# Example: "What's a guaranteed risk-free way to make quick money?"
+# Results in highlighted entities:
+# [guaranteed] (GUARANTEE_LANG - HIGH RISK - RED)
+# [risk-free] (RISK_FREE_CLAIM - HIGH RISK - RED)  
+# [quick money] (GET_RICH_QUICK - MEDIUM RISK - ORANGE)
+```
+
+#### **🔍 Linguistic Context Awareness**
+Unlike simple regex patterns, spaCy understands:
+- **Word boundaries**: Distinguishes "risk-free" from "low-risk environment"
+- **Phrase units**: Recognizes "quick money" as a single semantic unit
+- **Context sensitivity**: Differentiates "insider tips" from "helpful tips"
+- **Token relationships**: Understands linguistic dependencies between words
+
+### 🏗️ **Technical Architecture**
+
+#### **Three-Layer Validation System:**
+
+1. **🔍 Pattern Layer**: Fast regex-based detection for obvious violations
+2. **🛡️ Guardrails Layer**: Comprehensive financial compliance validation
+3. **🧠 NLP Layer**: Advanced spaCy entity recognition with linguistic context
+
+#### **Integration Flow:**
+```python
+# Enhanced validation pipeline
+prompt -> spaCy NER -> Guardrails Validator -> Enhanced HTML -> User
+         ↓              ↓                      ↓
+    Entity Detection   Rule Validation    Color Highlighting
+    Risk Assessment    Fix Suggestions    Educational Content
+```
+
+#### **Performance Optimizations:**
+- **Lazy Loading**: spaCy model loads only when enhanced analysis is enabled
+- **Graceful Fallback**: System works with basic patterns if spaCy unavailable  
+- **Efficient Caching**: Entity ruler patterns cached for repeated use
+- **Fast Inference**: <100ms typical analysis time for financial text
 
 ## 🎓 Tutorial Learning Path
 
@@ -217,9 +273,16 @@ Tutorial 3 → Tutorial 4 → Tutorial 7 → Custom Implementation
 ## 🔧 Configuration
 
 ### Environment Variables
-- `GROQ_API_KEY`: API key for Groq LLM services
-- `GUARDRAILS_API_KEY`: API key for Guardrails AI platform
-- `HUGGINGFACE_API_TOKEN`: Optional, for Hugging Face models
+- `GEMINI_API_KEY` or `GOOGLE_API_KEY`: API key for Google Gemini LLM
+- `GROQ_API_KEY`: API key for Groq LLM services (optional)
+- `GUARDRAILS_API_KEY`: API key for Guardrails AI platform (optional)
+
+### Dependencies Included
+- **guardrails-ai**: Core validation framework
+- **gradio**: Web interface framework  
+- **google-generativeai**: Google Gemini integration
+- **spacy**: Advanced NLP and entity recognition
+- **transformers + torch**: Advanced AI model support (optional)
 
 ### Guardrail Configuration Examples
 
@@ -251,24 +314,42 @@ guard = create_manipulation_guard()
 
 ## 📊 Example Outputs
 
-### 🏛️ **Showcase Demo Results**
+### 🏦 **Enhanced Financial Advisor Results**
 
-**Competitor Blocking:**
+**High-Risk Question Analysis:**
 ```
-✅ PASSED: "Our AI solution is great for customer service."
-❌ BLOCKED: "Unlike OpenAI's GPT, our model is better."
+Input: "What's a guaranteed risk-free way to make quick money?"
+
+🚨 Prompt Violations Detected:
+- [guaranteed] (GUARANTEE_LANG - HIGH RISK)
+- [risk-free] (RISK_FREE_CLAIM - HIGH RISK)  
+- [quick money] (GET_RICH_QUICK - MEDIUM RISK)
+
+📊 Compliance Analysis Generated:
+- 16,986 character detailed HTML analysis
+- Color-coded entity highlighting
+- Side-by-side original vs compliant comparison
+- Educational explanations and safer alternatives
+
+🧠 Advanced NLP Analysis:
+- HIGH risk (3 entities detected)
+- Linguistic context awareness enabled
+- spaCy entity recognition successful
 ```
 
-**Format Validation:**
+**Clean Question Analysis:**
 ```
-✅ PASSED: "HELLO WORLD" (two words, all caps)
-❌ BLOCKED: "hello world" (not all caps)
-```
+Input: "Can you explain how diversification works?"
 
-**Manipulation Detection:**
-```
-✅ PASSED: "Our product improves productivity."
-❌ BLOCKED: "ACT NOW! Limited time - you'll regret missing this!"
+✅ No Violations Detected:
+- Compliant educational question
+- No problematic financial language
+- Appropriate for learning content
+
+📋 Response Enhancement:
+- Added educational disclaimers
+- Enhanced with professional guidance
+- Maintained educational focus
 ```
 
 ### 🎓 **Tutorial Learning Experience**
@@ -325,28 +406,28 @@ results = demo_manipulation_detection()
 
 ## 🎓 Learning Outcomes
 
-By completing this comprehensive learning system, you will master:
+By exploring this enhanced financial compliance system, you will master:
 
 ### **🛠️ Core Technical Skills**
-- ✅ Pattern matching and regex techniques for content filtering
-- ✅ JSON parsing, validation, and error recovery
-- ✅ API integration with LLM services (Groq)
-- ✅ Security-focused input validation and SQL injection prevention
-- ✅ Error handling and defensive programming techniques
+- ✅ **Advanced NLP**: spaCy custom NER, entity recognition, linguistic pattern matching
+- ✅ **Multi-layer Validation**: Pattern matching + guardrails + entity detection
+- ✅ **API Integration**: Google Gemini, Groq LLM services, and AI model management
+- ✅ **Web Development**: Gradio multi-page interfaces, real-time validation
+- ✅ **Financial Compliance**: SEC/FINRA regulatory patterns and requirements
 
 ### **🧠 Advanced AI Safety Concepts**
-- ✅ Logical consistency checking and contradiction detection
-- ✅ Semantic content analysis and topic classification
-- ✅ AI hallucination detection using grounding techniques
-- ✅ Confidence scoring and uncertainty quantification
-- ✅ Knowledge base integration for fact verification
+- ✅ **Entity-Level Analysis**: Named Entity Recognition for compliance detection
+- ✅ **Linguistic Context**: Understanding phrase boundaries and semantic relationships
+- ✅ **Risk Assessment**: Multi-level risk scoring and confidence measurement
+- ✅ **Automated Enhancement**: Converting risky language to compliant alternatives
+- ✅ **Visual Compliance**: Color-coded analysis and educational explanations
 
 ### **📈 Professional Development Skills**
-- ✅ Test-driven development with comprehensive validation
-- ✅ Progressive learning through structured exercises  
-- ✅ Code documentation and maintainability practices
-- ✅ Performance optimization for content validation
-- ✅ Real-world application of AI safety principles
+- ✅ **Production-Ready Systems**: Scalable architecture with graceful fallbacks
+- ✅ **User Experience Design**: Multi-page interfaces with beautiful visualizations
+- ✅ **Educational Technology**: Interactive learning through compliance examples
+- ✅ **Regulatory Technology**: Real-world fintech compliance implementation
+- ✅ **Advanced Integration**: Combining multiple AI/NLP technologies effectively
 
 ## 🌟 Extension Challenges
 
@@ -455,4 +536,33 @@ This project is for **educational and demonstration purposes**.
 
 ---
 
-**🎉 Start your AI safety journey today! Begin with the showcase demo, then dive deep with hands-on tutorials. Build safer AI systems through practical learning! 🛡️🤖**
+## 🎉 Get Started Today!
+
+### **🚀 Quick Start - Enhanced Financial Advisor**
+```bash
+# 1. Setup environment
+conda activate guardrails-ai
+pip install -r requirements.txt
+python -m spacy download en_core_web_sm
+
+# 2. Configure API key
+echo 'GEMINI_API_KEY=your_key_here' > .env
+
+# 3. Launch the enhanced system
+python gradio_financial_advisor.py
+```
+
+### **🧪 Test Advanced Features**
+Try these questions to see the full power of spaCy + Guardrails:
+- `"What's a guaranteed way to get rich quick with insider tips?"`
+- `"Should I invest all my money for risk-free guaranteed profits?"`
+- `"Tell me a secret strategy that cannot lose money"`
+
+### **🎯 What You'll Experience**
+- **🧠 Advanced NLP**: State-of-the-art entity recognition and linguistic analysis
+- **🎨 Beautiful Visualizations**: Color-coded compliance analysis with detailed explanations  
+- **📊 Professional Interface**: Multi-page design with separate chat and analysis tabs
+- **🛡️ Multi-Layer Protection**: Pattern matching + guardrails + entity detection
+- **📚 Educational Value**: Learn compliance through interactive examples
+
+**Build safer, compliant AI systems with cutting-edge NLP technology! 🛡️🧠🚀**

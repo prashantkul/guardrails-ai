@@ -1,0 +1,100 @@
+<!-- Prompt compliance analysis template -->
+<div style="background: #fff3e0; border: 1px solid #ffcc02; border-radius: 8px; padding: 15px; margin: 10px 0;">
+    <h4 style="color: #f57c00; margin-top: 0; display: flex; align-items: center; gap: 10px;">
+        <span>🚨</span>
+        <span>Prompt Compliance Analysis</span>
+        {% if risk_level %}
+        <span style="background: {{ 'red' if risk_level == 'high' else 'orange' if risk_level == 'medium' else 'yellow' }}; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: normal;">
+            {{ risk_level.upper() }} RISK
+        </span>
+        {% endif %}
+    </h4>
+    
+    {% if error_message %}
+    <p style="color: #e65100; margin-bottom: 15px;">
+        <strong>Issues detected:</strong> {{ error_message }}
+    </p>
+    {% endif %}
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+        <div>
+            <h5 style="color: #d32f2f; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                <span>⚠️</span>
+                <span>Your Original Question</span>
+            </h5>
+            <div style="background: #fff5f5; border: 1px solid #ffcdd2; border-radius: 4px; padding: 12px; font-size: 14px; line-height: 1.5; min-height: 60px;">
+                {{ original_prompt | highlight_problematic | safe }}
+            </div>
+            <p style="font-size: 12px; color: #6c757d; margin-top: 5px;">
+                Length: {{ original_prompt | length }} characters
+                {% if detected_entities %}
+                | {{ detected_entities | length }} risk entities detected
+                {% endif %}
+            </p>
+        </div>
+        
+        <div>
+            <h5 style="color: #388e3c; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                <span>✅</span>
+                <span>Safer Alternative</span>
+            </h5>
+            <div style="background: #f1f8e9; border: 1px solid #c8e6c9; border-radius: 4px; padding: 12px; font-size: 14px; line-height: 1.5; min-height: 60px;">
+                {{ safer_prompt | safe }}
+            </div>
+            <p style="font-size: 12px; color: #6c757d; margin-top: 5px;">
+                Length: {{ safer_prompt | length }} characters
+                {% if improvement_score %}
+                | {{ improvement_score }}% safer
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    
+    {% if detected_entities and detected_entities | length > 0 %}
+    <div style="background: #ffe0e6; border: 1px solid #ffb3ba; border-radius: 4px; padding: 10px; margin-bottom: 15px;">
+        <h6 style="color: #c62828; margin-top: 0; display: flex; align-items: center; gap: 8px;">
+            <span>🔍</span>
+            <span>Risk Entities Detected ({{ detected_entities | length }}):</span>
+        </h6>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            {% for entity in detected_entities %}
+            <span style="background: {{ entity.color | default('#ff6b6b') }}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;" title="{{ entity.description }}">
+                {{ entity.text }} ({{ entity.type }})
+            </span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if issues_found %}
+    <div style="background: #e8f5e8; border: 1px solid #a5d6a7; border-radius: 4px; padding: 10px;">
+        <h6 style="color: #2e7d32; margin-top: 0; display: flex; align-items: center; gap: 8px;">
+            <span>🔍</span>
+            <span>Issues Found in Your Question:</span>
+        </h6>
+        {{ issues_found | safe }}
+    </div>
+    {% endif %}
+    
+    <div style="background: #e3f2fd; border: 1px solid #bbdefb; border-radius: 4px; padding: 10px; margin-top: 10px;">
+        <h6 style="color: #1976d2; margin-top: 0; display: flex; align-items: center; gap: 8px;">
+            <span>💡</span>
+            <span>Why This Matters:</span>
+        </h6>
+        <div style="font-size: 13px;">
+            <p style="margin-bottom: 5px;">• <strong>Regulatory Compliance:</strong> Financial communications must avoid misleading language</p>
+            <p style="margin-bottom: 5px;">• <strong>Consumer Protection:</strong> Prevents unrealistic expectations about investments</p>
+            <p style="margin-bottom: 0;">• <strong>Educational Value:</strong> Helps you learn appropriate financial terminology</p>
+        </div>
+    </div>
+
+    {% if spacy_analysis %}
+    <div style="background: #f3e5f5; border: 1px solid #ce93d8; border-radius: 4px; padding: 10px; margin-top: 10px;">
+        <h6 style="color: #7b1fa2; margin-top: 0; display: flex; align-items: center; gap: 8px;">
+            <span>🧠</span>
+            <span>Advanced NLP Analysis:</span>
+        </h6>
+        <p style="font-size: 13px; margin-bottom: 0;">{{ spacy_analysis | safe }}</p>
+    </div>
+    {% endif %}
+</div>

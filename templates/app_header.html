@@ -1,0 +1,16 @@
+<!-- Application header template -->
+<div style="text-align: center; padding: 20px;">
+    <h1>🏦 {{ app_title | default("AI Financial Advisor") }}</h1>
+    <h3>{{ app_subtitle | default("Powered by Google Gemini with Financial Compliance Guardrails") }}</h3>
+    <p style="color: #666;">{{ app_description | default("Ask questions about finance, investments, and money management. All responses are validated for regulatory compliance.") }}</p>
+    
+    {% if features %}
+    <div style="margin-top: 15px;">
+        {% for feature in features %}
+        <span style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 8px; margin: 2px; border-radius: 4px; font-size: 12px;">
+            {{ feature }}
+        </span>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

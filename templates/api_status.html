@@ -1,0 +1,25 @@
+<!-- API and system status template -->
+<div class="validation-box">
+    {% for service, status in services.items() %}
+    <p style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+        <strong>{{ service }}:</strong>
+        <span class="status-{{ 'good' if status.startswith('✅') else 'warning' if status.startswith('⚠️') else 'error' }}">
+            {{ status }}
+        </span>
+    </p>
+    {% endfor %}
+    
+    {% if additional_info %}
+    <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #dee2e6;">
+        {% for info in additional_info %}
+        <p style="font-size: 12px; color: #6c757d; margin-bottom: 4px;">{{ info }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if last_updated %}
+    <p style="font-size: 11px; color: #adb5bd; margin-top: 10px; text-align: right;">
+        Last updated: {{ last_updated }}
+    </p>
+    {% endif %}
+</div>
